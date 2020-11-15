@@ -1,0 +1,36 @@
+.column {
+  flex-direction: column;
+}
+.row {
+  flex-direction: row;
+}
+main {
+  justify-content: center;
+  vertical-align: middle;
+  text-align: center;
+}
+main form {
+  justify-content: center;
+  vertical-align: middle;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 30px;
+}
+#submit {
+  margin-left: 20px;
+}
+.details {
+  background-color: grey;
+  margin: 30px;
+  margin-top: 80px;
+  padding: 300px;
+  border: 1px solid rgb(66, 65, 65);
+  box-shadow: gray;
+}
+#first-a {
+  margin: 30px;
+  background-color: blue;
+}
+#second-a {
+  padding-top: 300px;
+}

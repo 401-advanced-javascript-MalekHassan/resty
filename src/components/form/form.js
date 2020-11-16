@@ -69,8 +69,8 @@ class Form extends React.Component {
           </div>
         </form>
         <div class="details">
-          <a id="first-a">{this.state.method}</a>{' '}
-          <a id="second-a">{this.state.url}</a>
+          <strong id="first-a">{this.state.method}</strong>
+          <strong id="second-a">{this.state.url}</strong>
         </div>
       </main>
     );

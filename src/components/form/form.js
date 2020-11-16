@@ -8,15 +8,34 @@ class Form extends React.Component {
   handleChangeUrl = (e) => {
     e.preventDefault();
     this.setState({ url: e.target.url.value, method: e.target.method.value });
+    fetch(`${e.target.url.value}`, {
+      method: e.target.method.value,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Success:', data);
+        this.props.handler(data.count, data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   };
   onSubmit = () => {};
   render() {
     return (
       <main>
-        <form class="container column" onSubmit={this.handleChangeUrl}>
+        <form
+          data-testid="ancestor"
+          class="container column"
+          onSubmit={this.handleChangeUrl}
+        >
           <div class="first row" id="input">
             <label for="url">url</label>
             <input
+              data-testid="descendantText"
               size="50"
               height="800"
               id="url"
@@ -24,10 +43,22 @@ class Form extends React.Component {
               name="url"
               value={this.state.value}
             />
-            <input id="submit" type="submit" value="GO" />
+            <input
+              data-testid="descendantSubmit"
+              id="submit"
+              type="submit"
+              value="GO"
+            />
           </div>
           <div class="second row" id="methods">
-            <input type="radio" value="GET" name="method" />
+            <input
+              defaultChecked
+              aria-checked="true"
+              data-testid="testId"
+              type="radio"
+              value="GET"
+              name="method"
+            />
             <label>GET</label>
             <input type="radio" value="POST" name="method" />
             <label>POST</label>

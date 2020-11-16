@@ -1,6 +1,6 @@
 {
   "main": "src/index.js",
-  "homepage":"https://malekhassan.github.io/401-advanced-javascript-MalekHassan/resty/",
+  "homepage":"https://401-advanced-javascript-malekhassan.github.io/resty/",
   "name": "resty",
   "version": "0.1.0",
   "private": true,

@@ -6,10 +6,9 @@ export default function Result({ header, count, results }) {
   return (
     <ul>
       <li>{count}</li>
-      <a>
-        {' '}
+      <strong>
         <ReactJson name="Header" src={header} />
-      </a>
+      </strong>
       <ReactJson name="Response" src={results} />;
     </ul>
   );

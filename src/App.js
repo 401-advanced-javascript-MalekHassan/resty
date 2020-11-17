@@ -12,17 +12,19 @@ class App extends React.Component {
       count: 0,
       results: [],
       header: '',
+      // history: [],
     };
   }
   handleForm = (counting, resulting) => {
     this.setState({ count: counting, results: resulting });
   };
   render() {
+    console.log('app', this.state.results);
     return (
       <React.Fragment>
         <Header />
         <Form handler={this.handleForm} />
-
+        {/* <History history={this.state.history} /> */}
         <Result
           title={'Get Star Wars People'}
           header={{ 'Content-Type': 'application/json' }}

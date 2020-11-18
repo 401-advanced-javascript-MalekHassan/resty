@@ -3,6 +3,7 @@ import Header from './components/header/header';
 import Form from './components/form/form';
 import Footer from './components/footer/footer';
 import Result from './components/results/results';
+import History from './components/history/history';
 import './App.css';
 
 class App extends React.Component {
@@ -15,7 +16,7 @@ class App extends React.Component {
       // history: [],
     };
   }
-  handleForm = (counting, resulting) => {
+  handleForm = (counting, resulting, history) => {
     this.setState({ count: counting, results: resulting });
   };
   render() {
@@ -23,8 +24,8 @@ class App extends React.Component {
     return (
       <React.Fragment>
         <Header />
+        <History />
         <Form handler={this.handleForm} />
-        {/* <History history={this.state.history} /> */}
         <Result
           title={'Get Star Wars People'}
           header={{ 'Content-Type': 'application/json' }}

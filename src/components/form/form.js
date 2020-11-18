@@ -1,14 +1,15 @@
 import './form.scss';
 import React from 'react';
 import superagent from 'superagent';
+import { If, Then } from '../if/if';
+
 // import History from './components/history/history';
 let localData = [];
-let array = [];
-localStorage.setItem('request', JSON.stringify(array));
+// let array = [];
 class Form extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { url: '', method: '', body: [] };
+    this.state = { url: '', method: '', body: [], whileFetching: false };
   }
   handleChangeUrl = async (e) => {
     e.preventDefault();
@@ -16,6 +17,7 @@ class Form extends React.Component {
       url: e.target.url.value,
       method: e.target.method.value,
       body: e.target.body.value,
+      whileFetching: true,
     });
     if (this.state.method === 'GET') {
       console.log('I am here');
@@ -28,17 +30,28 @@ class Form extends React.Component {
         .then((response) => response.json())
         .then((data) => {
           console.log('Success:', data);
-          let string = JSON.stringify(data);
-          let newArray = JSON.parse(localStorage.getItem('request'));
-          newArray.push({
+          this.setState({ whileFetching: false });
+          // localStorage.setItem('request', JSON.stringify(array));
+          let result = localStorage.getItem('request')
+            ? JSON.parse(localStorage.getItem('request'))
+            : [];
+          console.log(' result', result);
+          let string = data;
+          let total = {
             method: 'GET',
             url: e.target.url.value,
             data: string,
+          };
+          // console.log('total', total);
+          if (result == null) {
+            result = [];
+          }
+          result.push(total);
+          localStorage.setItem('request', JSON.stringify(result));
+          this.props.handler(data.count, data, {
+            method: 'GET',
+            url: e.target.url.value,
           });
-          localStorage.setItem('request', JSON.stringify(newArray));
-          localData = JSON.parse(localStorage.getItem('request'));
-          console.log('kaakakakaka', array);
-          this.props.handler(data.count, data);
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -52,30 +65,22 @@ class Form extends React.Component {
       superagent[lowerMethod](this.state.url)
         .send(this.state.body)
         .then((data) => {
+          this.setState({ whileFetching: false });
+          let result = localStorage.getItem('request')
+            ? JSON.parse(localStorage.getItem('request'))
+            : [];
           // console.log('im the data', data);
-          let string = JSON.stringify(data);
-          let newArray = JSON.parse(localStorage.getItem('request'));
           let query = {
             url: this.state.url,
             method: this.state.method,
-            body: string,
+            body: data,
           };
-          newArray.push(query);
-          localStorage.setItem('request', JSON.stringify(newArray));
-          localData = JSON.parse(localStorage.getItem('request'));
-          console.log('kaakakakaka', array);
-          // console.log('sksiwjwjw', data.header);
+          if (result == null) {
+            result = [];
+          }
+          result.push(query);
+          localStorage.setItem('request', JSON.stringify(result));
           this.props.handler(data.count, data.body);
-
-          // let history = localStorage.getItem('history')
-          //   ? JSON.parse(localStorage.getItem('history'))
-          //   : [];
-          // let check = false;
-          // history.forEach((item) => {
-          //   if (item.url === query.url && item.method === query.method) {
-          //     check = true;
-          //   }
-          // });
         });
     } else if (this.state.method === 'DELETE') {
       fetch(`${e.target.url.value}`, {
@@ -86,15 +91,17 @@ class Form extends React.Component {
       })
         .then((response) => response.json())
         .then((data) => {
+          this.setState({ whileFetching: false });
           console.log('Success:', data);
-          // let string = JSON.stringify(data);
-          let newArray = JSON.parse(localStorage.getItem('request'));
-          newArray.push({
-            method: 'DELETE',
-          });
-          localStorage.setItem('request', JSON.stringify(newArray));
-          localData = JSON.parse(localStorage.getItem('request'));
-          console.log('sjs', array);
+          let result = localStorage.getItem('request')
+            ? JSON.parse(localStorage.getItem('request'))
+            : [];
+          let query = { method: 'DELETE', url: this.state.url };
+          if (result == null) {
+            result = [];
+          }
+          result.push(query);
+          localStorage.setItem('request', JSON.stringify(result));
           this.props.handler(data.count, data);
         })
         .catch((error) => {
@@ -132,34 +139,34 @@ class Form extends React.Component {
             </div>
             <div className="second row" id="methods">
               <input
-                defaultChecked
-                aria-checked="true"
                 data-testid="testId"
                 type="radio"
                 value="GET"
                 name="method"
+                id="GET"
               />
               <label>GET</label>
-              <input type="radio" value="POST" name="method" />
+              <input type="radio" value="POST" name="method" id="POST" />
               <label>POST</label>
-              <input type="radio" value="PUT" name="method" />
+              <input type="radio" value="PUT" name="method" id="PUT" />
               <label>PUT</label>
-              <input type="radio" value="DELETE" name="method" />
+              <input type="radio" value="DELETE" name="method" id="DELETE" />
               <label>DELETE</label>
-              <input type="radio" value="PATCH" name="method" />
+              <input type="radio" value="PATCH" name="method" id="PATCH" />
               <label>PATCH</label>
             </div>
-          </form>
-          <div className="details">
-            {localData.map((key, index) => {
-              return (
-                <div key={index}>
-                  <strong id="first-a">{key.method}</strong>
-                  <strong id="second-a">{key.url}</strong>
+            <If condition={this.state.whileFetching === true}>
+              <Then>
+                <div className="row">
+                  <img
+                    src="https://i.gifer.com/YCZH.gif"
+                    alt="loading"
+                    width="200px"
+                  ></img>
                 </div>
-              );
-            })}
-          </div>
+              </Then>
+            </If>
+          </form>
         </main>
       </React.Fragment>
     );

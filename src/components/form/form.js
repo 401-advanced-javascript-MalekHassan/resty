@@ -1,7 +1,9 @@
 import './form.scss';
 import React from 'react';
+// import { Route, Switch } from 'react-router-dom';
 import superagent from 'superagent';
 import { If, Then } from '../if/if';
+import List from '../list/list'
 
 // import History from './components/history/history';
 let localData = [];
@@ -109,7 +111,27 @@ class Form extends React.Component {
         });
     }
   };
+ 
   render() {
+    let localData = localStorage.getItem('request')
+    ? JSON.parse(localStorage.getItem('request'))
+    : [];
+  if (localData == null) {
+    localData = [];
+  }
+  // localData = JSON.parse(localStorage.getItem('request'));
+  // console.log('aaaaa', localData);
+  function renderMe(event) {
+    let methodTarget = event.target.firstChild.textContent;
+    console.log(methodTarget, 'method');
+    let targetUrl = event.target.innerText.split('-')[1];
+    console.log('targetUrl', targetUrl);
+    let inputUrl = document.getElementById('url');
+    inputUrl.value = targetUrl;
+    let inputMethod = document.getElementById(`${methodTarget}`);
+    inputMethod.setAttribute('checked', 'true');
+    // console.log(inputMethod);
+  }
     return (
       <React.Fragment>
         <main>
@@ -155,6 +177,23 @@ class Form extends React.Component {
               <input type="radio" value="PATCH" name="method" id="PATCH" />
               <label>PATCH</label>
             </div>
+          <div>
+      <div className="details">
+        <If condition={localData !== null}>
+          <Then>
+            {localData.map((key, index) => {
+              return (
+                <div id="listener" key={index}>
+                  <strong id="first-a" onClick={renderMe}>
+                    {key.method}-{key.url}
+                  </strong>
+                </div>
+              );
+            })}
+          </Then>
+        </If>
+      </div>
+    </div>
             <If condition={this.state.whileFetching === true}>
               <Then>
                 <div className="row">

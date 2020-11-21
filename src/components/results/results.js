@@ -1,16 +1,23 @@
 import React from 'react';
 import ReactJson from 'react-json-view';
 import './results.scss';
+import { If, Then, Else } from '../if/if';
 
 export default function Result({ header, count, results }) {
   return (
-    <ul>
-      <li>{count}</li>
-      <a>
-        {' '}
-        <ReactJson name="Header" src={header} />
-      </a>
-      <ReactJson name="Response" src={results} />;
-    </ul>
+    <div>
+      <p>{count}</p>
+      <If condition={results}>
+        <Then>
+          <strong>
+            <ReactJson name="Header" src={header} />
+          </strong>
+          <ReactJson name="Response" src={results} />;
+        </Then>
+        <Else>
+          <strong>Please Enter valid details</strong>
+        </Else>
+      </If>
+    </div>
   );
 }
